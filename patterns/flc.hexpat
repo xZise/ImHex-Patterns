@@ -1,6 +1,9 @@
 #pragma endian little
 #pragma magic [12 AF] @ 0x4
 
+// A flic file could contain many DELTA_FLC chunks, which contain many RLE packets
+//#define DECODE_DELTA_FLC
+
 import std.mem;
 import std.core;
 import std.io;
@@ -201,7 +204,12 @@ struct Chunk {
         ByteRunChunk::Line lines[lines];
     } else if (type == ChunkType::DELTA_FLC) {
         u16 line_count;
+        #ifdef DECODE_DELTA_FLC
         DeltaFLCChunk::Line lines[line_count];
+        #endif
+        #ifndef DECODE_DELTA_FLC
+        u8 data[size - ($ - addressof(this))];
+        #endif
     }
     // When the chunk size is rounded up to the next even number, it might need a padding byte.
     // Unrecognized chunk types will also fill out the padding
