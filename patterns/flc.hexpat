@@ -163,11 +163,11 @@ namespace ByteRunChunk {
     };
 }
 
-struct ColorPalettePacket {
+struct ColorPalettePacket<auto ZeroLength> {
     u8 skip;
     u8 copy;
     if (copy == 0) {
-        Color color[256];
+        Color color[ZeroLength];
     } else {
         Color color[copy];
     }
@@ -193,7 +193,10 @@ struct Chunk {
         Chunk subchunks[chunks];
     } else if (type == ChunkType::COLOR_256) {
         u16 num_packets;
-        ColorPalettePacket packets[num_packets];
+        ColorPalettePacket<256> packets[num_packets];
+    } else if (type == ChunkType::COLOR_64) {
+        u16 num_packets;
+        ColorPalettePacket<64> packets[num_packets];
     } else if (type == ChunkType::BYTE_RUN) {
         ByteRunChunk::Line lines[lines];
     } else if (type == ChunkType::DELTA_FLC) {
