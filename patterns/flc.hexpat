@@ -114,16 +114,13 @@ namespace DeltaFLCChunk {
     };
 
     struct Packet {
-        u8 data_count = 0;
-
         u8 skip_count;
         s8 count;
         if (count < 0) {
-            data_count = 1;
+            u8 replicate_bytes[2];
         } else {
-            data_count = count;
+            u8 literal_bytes[count * 2];
         }
-        u8 data[data_count * 2];
     };
 
     u16 packets_in_line;
@@ -149,17 +146,14 @@ namespace ByteRunChunk {
     u16 pixels_in_line_counter = 0;
 
     struct Packet {
-        u8 data_count = 0;
-
         s8 count;
         if (count < 0) {
-            data_count = -count;
-            pixels_in_line_counter = data_count + pixels_in_line_counter;
+            pixels_in_line_counter = -count + pixels_in_line_counter;
+            u8 literal_bytes[-count];
         } else {
-            data_count = 1;
             pixels_in_line_counter = count + pixels_in_line_counter;
+            u8 replicate_byte;
         }
-        u8 data[data_count];
     };
 
     struct Line {
