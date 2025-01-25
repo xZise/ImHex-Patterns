@@ -210,6 +210,13 @@ struct Chunk {
         #ifndef DECODE_DELTA_FLC
         u8 data[size - ($ - addressof(this))];
         #endif
+    } else if (type == ChunkType::PSTAMP) {
+        u16 height;
+        u16 width;
+        u16 xlate;
+        u8 data[size - ($ - addressof(this))];
+    } else if (type == ChunkType::FLI_COPY) {
+        Color pixels[lines * pixels_per_line];
     }
     // When the chunk size is rounded up to the next even number, it might need a padding byte.
     // Unrecognized chunk types will also fill out the padding
