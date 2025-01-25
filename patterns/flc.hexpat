@@ -50,35 +50,53 @@ enum ChunkType : u16 {
     HUFFMAN_TABLE = 0xF1FC      // Huffman compression table chunk
 };
 
+bitfield ExtFlags {
+    segment_table_present : 1;
+    regular_key_imagees : 1;
+    identical_palette : 1;
+    huffmann_compressed : 1;
+    bwt_huffmann_compressed : 1;
+    bitmap_masks_present : 1;
+    multilevel_masks_present : 1;
+    region_data_present : 1;
+    password_protected : 1;
+    digitized_audio : 1;
+    contains_script : 1;
+    region_masks_present : 1;
+    contains_overlays : 1;
+    frame_shift_compressed : 1;
+    padding : 2;
+};
+
 u16 pixels_per_line = 0;
 u16 lines = 0;
 
 struct Header {
-    u32 size;
-    FlicType type;
-    u16 frames;
-    u16 width;
-    u16 height;
-    u16 depth;
-    u16 flags;
-    u32 speed;
-    u16 reserved1;
-    u32 created;
-    u32 creator;
-    u32 updated;
-    u32 updater;
-    u16 aspect_dx;
-    u16 aspect_dy;
-    u16 ext_flags;
-    u16 keyframes;
-    u16 totalframes;
-    u32 req_memory;
-    u16 max_regions;
-    u16 transp_num;
-    u8  reserved2[24];
-    u32 oframe1;
-    u32 oframe2;
-    u8  reserved3[40];
+    u32 size           [[comment("Size of FLIC including this header")]];
+    FlicType type      [[comment("File type 0xAF11, 0xAF12, 0xAF30, 0xAF44, ...")]];
+    u16 frames         [[comment("Number of frames in first segment")]];
+    u16 width          [[comment("FLIC width in pixels")]];
+    u16 height         [[comment("FLIC height in pixels")]];
+    u16 depth          [[comment("Bits per pixel (usually 8)")]];
+    u16 flags          [[comment("Set to zero or to three")]];
+    u32 speed          [[comment("Delay between frames")]];
+    u16 reserved1      [[comment("Set to zero")]];
+    u32 created        [[comment("Date of FLIC creation (FLC only)")]];
+    u32 creator        [[comment("Serial number or compiler id (FLC only)")]];
+    u32 updated        [[comment("Date of FLIC update (FLC only)")]];
+    u32 updater        [[comment("Serial number (FLC only), see creator")]];
+    u16 aspect_dx      [[comment("Width of square rectangle (FLC only)")]];
+    u16 aspect_dy      [[comment("Height of square rectangle (FLC only)")]];
+    ExtFlags ext_flags [[comment("EGI: flags for specific EGI extensions")]];
+    u16 keyframes      [[comment("EGI: key-image frequency")]];
+    u16 totalframes    [[comment("EGI: total number of frames (segments)")]];
+    u32 req_memory     [[comment("EGI: maximum chunk size (uncompressed)")]];
+    u16 max_regions    [[comment("EGI: max. number of regions in a CHK_REGION chunk")]];
+    u16 transp_num     [[comment("EGI: number of transparent levels")]];
+    u8  reserved2[24]  [[comment("Set to zero")]];
+    u32 oframe1        [[comment("Offset to frame 1 (FLC only)")]];
+    u32 oframe2        [[comment("Offset to frame 2 (FLC only)")]];
+    u8  reserved3[40]  [[comment("Set to zero")]];
 
     pixels_per_line = width;
     lines = height;
