@@ -66,7 +66,7 @@ fn format_roi(auto roi) {
     return std::format("{0} (Children: {1})", roi.name, roi.num_children);
 };
 
-struct ROI<auto Offset, auto Lods> {
+struct ModelROI<auto Offset, auto Lods> {
     std::string::SizedString<u32> name;
     Vector3f boundingSpherePosition;
     float boundingSphereRadius;
@@ -87,7 +87,7 @@ struct ROI<auto Offset, auto Lods> {
         }
     }
     u32 num_children;
-    ROI<Offset, Lods> children[num_children];
+    ModelROI<Offset, Lods> children[num_children];
 } [[format("format_roi")]];
 
 fn format_model(auto model) {
@@ -101,17 +101,35 @@ struct Model<auto Lods> {
     u32 num_animations;
     u32 duration;
     AnimationNode animation;
-    ROI<addressof(this), Lods> roi;
+    ModelROI<addressof(this), Lods> roi;
 } [[format("format_model")]];
 
 fn format_named(auto named_ref) {
     return std::format("{0} (Size: {1})", named_ref.name, named_ref.size);
 };
 
+struct PartROI<auto Offset, auto Lods> {
+    std::string::SizedString<u32> name;
+    u32 num_lods;
+    u32 roi_info_offset;
+    if (Lods) {
+        LOD lod[num_lods];
+    } else {
+        u8 lod[roi_info_offset - ($ - Offset)];
+    }
+    std::assert(roi_info_offset + Offset == $, "ROI info offset does not match");
+};
+
+struct Part<auto Lods> {
+    u32 texture_info_offset;
+    u32 num_rois;
+    PartROI<addressof(this), Lods> rois[num_rois];
+};
+
 struct PartRef {
     std::string::SizedString<u32> name;
     u32 size;
-    u32 offset;
+    Part<false> *part : u32;
 } [[format("format_named")]];
 
 struct ModelRef {
