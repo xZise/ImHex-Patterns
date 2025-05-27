@@ -7,12 +7,39 @@ import std.mem;
 import std.io;
 import std.core;
 import std.sys;
+import std.ptr;
 import type.color;
 
 import legoisland.common;
 import legoisland.animation;
 
 using Color = type::RGB8 [[hex::inline_visualize("color", r, g, b, 0xff)]];
+
+struct Gif {
+    u32 width;
+    u32 height;
+    u32 num_colors;
+    Color colors[num_colors];
+    u8 image[width * height];
+};
+
+struct NamedGif {
+    std::string::SizedString<u32> name;
+    Gif gif [[inline]];
+};
+
+struct TextureInfoEntry {
+    std::string::SizedString<u32> name;
+    Gif image1;
+    if (std::string::at(name, 0) == '^') {
+        Gif image2;
+    }
+};
+
+struct TextureInfo {
+    u32 num_textures;
+    TextureInfoEntry textures[num_textures];
+};
 
 bitfield PackedVertexIndex {
     new_vertex: 1;
@@ -96,7 +123,7 @@ fn format_model(auto model) {
 
 struct Model<auto Lods> {
     u32 version;
-    u32 texture_info_offset;
+    TextureInfo *texture_info_offset : u32 [[pointer_base("std::ptr::relative_to_parent")]];
     u32 num_rois;
     u32 num_animations;
     u32 duration;
@@ -121,7 +148,7 @@ struct PartROI<auto Offset, auto Lods> {
 };
 
 struct Part<auto Lods> {
-    u32 texture_info_offset;
+    TextureInfo *texture_info_offset : u32 [[pointer_base("std::ptr::relative_to_parent")]];
     u32 num_rois;
     PartROI<addressof(this), Lods> rois[num_rois];
 };
@@ -154,19 +181,6 @@ struct World {
     u32 num_models;
     ModelRef models[num_models];
 } [[format("format_world")]];
-
-struct Gif {
-    u32 width;
-    u32 height;
-    u32 num_colors;
-    Color colors[num_colors];
-    u8 image[width * height];
-};
-
-struct NamedGif {
-    std::string::SizedString<u32> name;
-    Gif gif [[inline]];
-};
 
 struct WDB {
     u32 num_worlds;
