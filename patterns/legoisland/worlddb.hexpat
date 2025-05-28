@@ -189,9 +189,11 @@ struct World {
 struct WDB {
     u32 num_worlds;
     World worlds[num_worlds];
-    u32 gif_chunk_size;
-    u32 num_frames;
-    NamedGif frames[num_frames];
+    u32 images_size;
+    u32 num_images;
+    NamedGif images[num_images];
+    u32 global_part_size;
+    Part<false> global_part;
 };
 
 WDB wdb @ 0;
