@@ -34,7 +34,7 @@ struct TextureInfoEntry {
     if (std::string::at(name, 0) == '^') {
         Gif image2;
     }
-};
+} [[format("format_named")]];
 
 struct TextureInfo {
     u32 num_textures;
@@ -131,7 +131,11 @@ struct Model<auto Lods> {
     ModelROI<addressof(this), Lods> roi;
 } [[format("format_model")]];
 
-fn format_named(auto named_ref) {
+fn format_named(auto named) {
+    return named.name;
+};
+
+fn format_named_ref(auto named_ref) {
     return std::format("{0} (Size: {1})", named_ref.name, named_ref.size);
 };
 
@@ -145,7 +149,7 @@ struct PartROI<auto Offset, auto Lods> {
         u8 lod[roi_info_offset - ($ - Offset)];
     }
     std::assert(roi_info_offset + Offset == $, "ROI info offset does not match");
-};
+} [[format("format_named")]];
 
 struct Part<auto Lods> {
     TextureInfo *texture_info_offset : u32 [[pointer_base("std::ptr::relative_to_parent")]];
@@ -157,7 +161,7 @@ struct PartRef {
     std::string::SizedString<u32> name;
     u32 size;
     Part<false> *part : u32;
-} [[format("format_named")]];
+} [[format("format_named_ref")]];
 
 struct ModelRef {
     std::string::SizedString<u32> name;
@@ -168,7 +172,7 @@ struct ModelRef {
     Vector3f direction;
     Vector3f up;
     padding[1];
-} [[format("format_named")]];
+} [[format("format_named_ref")]];
 
 fn format_world(auto world) {
     return std::format("{0} (Parts: {1}, Models: {2})", world.name, world.num_parts, world.num_models);
