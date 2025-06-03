@@ -4,6 +4,7 @@
 
 import std.io;
 import std.string;
+import type.magic;
 
 import legoisland.common;
 import legoisland.animation;
@@ -23,7 +24,7 @@ struct Animation<auto ParseScene> {
 };
 
 struct Anim {
-    s32 magic;
+    type::Magic<"\x11\x00\x00\x00"> magic;
     float unknown1;
     Vector3f unknownVector;
     s32 parse_scene;
