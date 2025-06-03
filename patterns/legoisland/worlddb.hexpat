@@ -36,7 +36,13 @@ struct TextureInfoEntry {
     }
 } [[format("format_named")]];
 
-struct TextureInfo {
+struct ModelTextureInfo {
+    u32 num_textures;
+    u32 skip_textures;
+    TextureInfoEntry textures[num_textures];
+};
+
+struct PartTextureInfo {
     u32 num_textures;
     TextureInfoEntry textures[num_textures];
 };
@@ -117,13 +123,18 @@ struct ModelROI<auto Offset, auto Lods> {
     ModelROI<Offset, Lods> children[num_children];
 } [[format("format_roi")]];
 
+// workaround as long as std::ptr::relative_to_parent does not return the actual parent but the same value.
+fn relative_to_parent(u32 offset) {
+    return addressof(parent.parent);
+};
+
 fn format_model(auto model) {
     return std::format("{0}", model.roi.name);
 };
 
 struct Model<auto Lods> {
     u32 version;
-    TextureInfo *texture_info_offset : u32 [[pointer_base("std::ptr::relative_to_parent")]];
+    ModelTextureInfo *texture_info_offset : u32 [[pointer_base("relative_to_parent")]];
     u32 num_rois;
     u32 num_animations;
     u32 duration;
@@ -152,7 +163,7 @@ struct PartROI<auto Offset, auto Lods> {
 } [[format("format_named")]];
 
 struct Part<auto Lods> {
-    TextureInfo *texture_info_offset : u32 [[pointer_base("std::ptr::relative_to_parent")]];
+    PartTextureInfo *texture_info_offset : u32 [[pointer_base("relative_to_parent")]];
     u32 num_rois;
     PartROI<addressof(this), Lods> rois[num_rois];
 };
