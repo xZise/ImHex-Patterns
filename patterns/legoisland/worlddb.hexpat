@@ -136,9 +136,7 @@ struct Model<auto Lods> {
     u32 version;
     ModelTextureInfo *texture_info_offset : u32 [[pointer_base("relative_to_parent")]];
     u32 num_rois;
-    u32 num_animations;
-    u32 duration;
-    AnimationNode animation;
+    Animation<false> animation;
     ModelROI<addressof(this), Lods> roi;
 } [[format("format_model")]];
 

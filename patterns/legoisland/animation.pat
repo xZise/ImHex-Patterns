@@ -42,3 +42,22 @@ struct AnimationNode {
     u32 num_children;
     AnimationNode children[num_children];
 };
+
+struct Actor {
+    std::string::SizedString<u32> name;
+    if (name.size > 0) {
+        u32 unknown;
+    }
+};
+
+struct Animation<auto ParseScene> {
+    u32 num_actors;
+    Actor actors[num_actors];
+    s32 duration;
+
+    if (ParseScene) {
+        std::unimplemented();
+    }
+
+    AnimationNode animation;
+};
