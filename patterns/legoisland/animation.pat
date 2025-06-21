@@ -27,6 +27,11 @@ struct RotationKey {
     float z;
 };
 
+struct RotationZKey {
+    TimeAndFlags timeAndFlags;
+    float z;
+};
+
 struct MorphKey {
     TimeAndFlags timeAndFlags;
     u8 some_bool;
@@ -53,13 +58,22 @@ struct Actor {
     }
 };
 
+struct Scene {
+    u16 num_translations1;
+    VertexKey translations1[num_translations1];
+    u16 num_translations2;
+    VertexKey translations2[num_translations2];
+    u16 num_rotations;
+    RotationZKey rotations[num_rotations];
+};
+
 struct Animation<auto ParseScene> {
     u32 num_actors;
     Actor actors[num_actors];
     s32 duration;
 
     if (ParseScene) {
-        std::unimplemented();
+        Scene scene;
     }
 
     AnimationNode animation;
