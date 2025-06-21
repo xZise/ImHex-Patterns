@@ -20,15 +20,25 @@ struct ModelInfo {
     u8 unknown2;
 } [[format("format_name")]];
 
+bitfield ActorMask {
+	Pepper: 1;
+	Mama: 1;
+	Papa: 1;
+	Nick: 1;
+	Laura: 1;
+    padding: 3;
+};
+
 struct Animation {
     std::string::SizedString<u8> name;
     u32 object_id;
     s16 location;
     u8 unknown1;
     u8 unknown2;
-    u8 unknown3;
+    ActorMask actor_mask;
     u8 unknown4;
-    float unknown_floats[4];
+    Vector3f unknown_position;
+    float unknown_radius;
     u8 model_count;
     ModelInfo model_info[model_count];
 } [[format("format_name")]];
