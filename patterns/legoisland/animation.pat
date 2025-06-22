@@ -34,7 +34,7 @@ struct RotationZKey {
 
 struct MorphKey {
     TimeAndFlags timeAndFlags;
-    u8 some_bool;
+    bool visible;
 };
 
 struct AnimationNode {
@@ -54,7 +54,7 @@ struct AnimationNode {
 struct Actor {
     std::string::SizedString<u32> name;
     if (name.size > 0) {
-        u32 unknown;
+        u32 actor_type;
     }
 };
 
