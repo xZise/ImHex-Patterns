@@ -21,11 +21,11 @@ struct ModelInfo {
 } [[format("format_name")]];
 
 bitfield ActorMask {
-	Pepper: 1;
-	Mama: 1;
-	Papa: 1;
-	Nick: 1;
-	Laura: 1;
+    Pepper: 1;
+    Mama: 1;
+    Papa: 1;
+    Nick: 1;
+    Laura: 1;
     padding: 3;
 };
 

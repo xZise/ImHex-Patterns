@@ -7,11 +7,11 @@ import std.string;
 import legoisland.common;
 
 bitfield TimeAndFlags {
-  time: 24;
-  skip_interpolation: 1;
-  negate_rotation: 1;
-  active: 1;
-  padding: 5;
+    time: 24;
+    skip_interpolation: 1;
+    negate_rotation: 1;
+    active: 1;
+    padding: 5;
 };
 
 struct VertexKey {

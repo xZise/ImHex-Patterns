@@ -59,9 +59,9 @@ bitfield PackedVertexIndex {
 } [[bitfield_order(std::core::BitfieldOrder::MostToLeastSignificant, 32)]];
 
 enum Shading: u8 {
-  Flat = 0,
-  Gouraud = 1,
-  WireFrame = 2,
+    Flat = 0,
+    Gouraud = 1,
+    WireFrame = 2,
 };
 
 struct Mesh {
