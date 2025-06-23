@@ -180,7 +180,7 @@ struct ModelRef {
     Vector3f location;
     Vector3f direction;
     Vector3f up;
-    padding[1];
+    bool visible;
 } [[format("format_named_ref")]];
 
 fn format_world(auto world) {
