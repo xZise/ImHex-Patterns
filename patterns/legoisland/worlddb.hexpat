@@ -13,20 +13,7 @@ import type.color;
 import legoisland.common;
 import legoisland.animation;
 
-using Color = type::RGB8 [[hex::inline_visualize("color", r, g, b, 0xff)]];
-
-struct Gif {
-    u32 width;
-    u32 height;
-    u32 num_colors;
-    Color colors[num_colors];
-    u8 image[width * height];
-};
-
-struct NamedGif {
-    std::string::SizedString<u32> name;
-    Gif gif [[inline]];
-};
+import legoisland.textures;
 
 struct TextureInfoEntry {
     std::string::SizedString<u32> name;
@@ -209,8 +196,7 @@ struct WDB {
     u32 num_worlds;
     World worlds[num_worlds];
     u32 images_size;
-    u32 num_images;
-    NamedGif images[num_images];
+    Textures textures;
     u32 global_part_size;
     Part<false> global_part;
 };
